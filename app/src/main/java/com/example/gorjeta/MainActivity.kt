@@ -1,7 +1,9 @@
 package com.example.gorjeta
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.os.ResultReceiver
 import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
@@ -21,7 +23,6 @@ class MainActivity : AppCompatActivity() {
 
         var percentage: Int = 0
          binding.rdOne.setOnCheckedChangeListener(){_, isChecked ->
-             println("option one:$isChecked")
              if (isChecked) {
                  percentage = 10
              }
@@ -58,14 +59,24 @@ class MainActivity : AppCompatActivity() {
                 ){
                 Snackbar.make(binding.tieTotal,"Preencha todos os campos", Snackbar.LENGTH_LONG).show()
             } else {
-                val totalCont = totalContTemp.toString().toFloat()
+                val totalCont= totalContTemp.toString().toFloat()
                 val  totalPeople = totalPeopleTemp.toString().toInt()
 
                 val totalResult = totalCont / totalPeople
                 val percent = totalResult * percentage / 100
                 val totalPercent =  totalResult + percent
-                binding.tvResult.text = "Total com gorgeta: $totalPercent"
+
+
+                val intent = Intent (this, ResultActivity::class.java)
+                intent.apply{
+                    putExtra("totalCont", totalCont)
+                    putExtra("totalPeople", totalPeople)
+                    putExtra("percentage", percentage)
+                    putExtra("total",totalPercent)
                 }
+                startActivity(intent)
+            }
+
 
                 binding.btnClean.setOnClickListener(){
                 binding.tvResult.text = ""
